@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.anid.assignment.R;
 import com.example.anid.assignment.api.model.Data;
 import com.example.anid.assignment.api.model.Product;
@@ -20,7 +19,6 @@ import java.util.List;
 public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapter.MyViewHolder> {
 
     private Context mContext;
-    private Data mData;
     private List<Product> mProductsList;
 
     class MyViewHolder extends RecyclerView.ViewHolder {
@@ -40,10 +38,9 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
         }
     }
 
-    public MainActivityAdapter(Context context, Data data) {
+    public MainActivityAdapter(Context context, List<Product> productsList) {
         mContext = context;
-        mData = data;
-        mProductsList = mData.getContent().get(0).getProducts();
+        mProductsList = productsList;
     }
 
     @NonNull

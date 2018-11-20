@@ -8,6 +8,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.anid.assignment.adapters.MainActivityAdapter;
+import com.example.anid.assignment.adapters.MainActivitySectionAdapter;
 import com.example.anid.assignment.api.model.Content;
 import com.example.anid.assignment.api.model.Data;
 import com.example.anid.assignment.api.service.DataClient;
@@ -23,17 +24,17 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-    private RecyclerView mRecyclerView;
+    private RecyclerView mSectionRecyclerView;
 
-    Data mData;
+    private Data mData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mRecyclerView = findViewById(R.id.product_list);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        mSectionRecyclerView = findViewById(R.id.section_recyler_view);
+        mSectionRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
         getData();
     }
@@ -53,19 +54,19 @@ public class MainActivity extends AppCompatActivity {
                         return;
                     }
                     mData = response.body();
-                    MainActivityAdapter activityAdapter = new MainActivityAdapter(MainActivity.this, mData);
-                    mRecyclerView.setAdapter(activityAdapter);
-                    Log.d("apple content ", mData.getCode() + "");
-                    List<Content> contents = mData.getContent();
-                    for (Content content : contents) {
-                        /*for (Product product : content.getProducts()) {
+                    MainActivitySectionAdapter mainActivitySectionAdapter = new MainActivitySectionAdapter(MainActivity.this, mData);
+                    mSectionRecyclerView.setAdapter(mainActivitySectionAdapter);
+                    //Log.d("apple content ", mData.getCode() + "");
+                    //List<Content> contents = mData.getContent();
+                    /*for (Content content : contents) {
+                        *//*for (Product product : content.getProducts()) {
                             Log.d("apple sectionT:", product.get;
-                        }*/
+                        }*//*
                         Log.d("apple sectitonT:", content.getBannerImage() + "");
                         Log.d("apple sectitonT:", content.getFirstImage() + "");
                         Log.d("apple sectitonT:", content.getSecondImage() + "");
                         Log.d("apple :", "*****************");
-                    }
+                    }*/
                 } else {
                     Toast.makeText(MainActivity.this, "Api call error1", Toast.LENGTH_SHORT).show();
 

@@ -4,13 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.MainActivity"
-    android:padding="16dp">
+    android:paddingTop="@dimen/large_padding"
+    android:paddingBottom="8dp"
+    android:background="@color/colorBackground">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/section_recyler_view"
+        android:id="@+id/recycler_view_section"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
+        android:layout_height="match_parent">
     </android.support.v7.widget.RecyclerView>
 
 </LinearLayout>

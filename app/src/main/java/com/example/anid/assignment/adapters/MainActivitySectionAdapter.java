@@ -24,9 +24,16 @@ public class MainActivitySectionAdapter extends RecyclerView.Adapter<RecyclerVie
     private Data mData;
     private List<Content> mContents;
 
-    private static final int PRODUCT_SECTION = R.layout.section_list_item_product;
-    private static final int BANNER_SECTION = R.layout.list_item_banner;
-    private static final int SPLIT_BANNER_SECTION = R.layout.list_item_split;
+    private static final String mNoInfo = "No information availabel";
+
+    private static final int PRODUCT_SECTION = R.layout.section_product_list_item;
+    private static final int BANNER_SECTION = R.layout.section_banner_list_item;
+    private static final int SPLIT_BANNER_SECTION = R.layout.section_split_banner_list_item;
+    private static final int MISSING_SECTION = R.layout.section_missing_list_item;
+
+    private static final String SECTION_TYPE_HORIZONTAL_FREE_SCROLL = "horizontalfreescroll";
+    private static final String SECTION_TYPE_BANNER = "banner";
+    private static final String SECTION_TYPE_SPLIT_BANNER = "splitbanner";
 
     class MyViewHolder extends RecyclerView.ViewHolder{
 
@@ -37,17 +44,31 @@ public class MainActivitySectionAdapter extends RecyclerView.Adapter<RecyclerVie
         MyViewHolder(View view) {
             super(view);
 
-            mSectionHeader = view.findViewById(R.id.section_header);
-            mRecyclerView = view.findViewById(R.id.recycler_view_list);
+            mSectionHeader = view.findViewById(R.id.txt_section_header);
+            mRecyclerView = view.findViewById(R.id.recycler_view_product_list);
         }
 
         public void bind(Content content) {
             mSectionHeader.setText(content.getName());
             mProducts = content.getProducts();
 
-            MainActivityAdapter mainActivityAdapter = new MainActivityAdapter(mContext, mProducts);
+            ProductsAdapter productsAdapter = new ProductsAdapter(mContext, mProducts);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
-            mRecyclerView.setAdapter(mainActivityAdapter);
+            mRecyclerView.setAdapter(productsAdapter);
+        }
+    }
+
+    class MyViewHolderMissing extends RecyclerView.ViewHolder {
+
+        TextView mInfoMissing;
+        public MyViewHolderMissing(View view) {
+            super(view);
+
+            mInfoMissing = view.findViewById(R.id.txt_info_missing);
+        }
+
+        public void bind(String info) {
+            mInfoMissing.setText(info);
         }
     }
 
@@ -57,7 +78,7 @@ public class MainActivitySectionAdapter extends RecyclerView.Adapter<RecyclerVie
         public MyViewHolderBanner(View view) {
             super(view);
 
-            mSectionBanner = view.findViewById(R.id.section_banner);
+            mSectionBanner = view.findViewById(R.id.img_section_banner);
         }
 
         public void bind(String url) {
@@ -74,8 +95,8 @@ public class MainActivitySectionAdapter extends RecyclerView.Adapter<RecyclerVie
         public MyViewHolderSplitBanner(View view) {
             super(view);
 
-            mFirstImage = view.findViewById(R.id.section_first_image);
-            mSecondImage = view.findViewById(R.id.section_second_image);
+            mFirstImage = view.findViewById(R.id.img_section_first_image);
+            mSecondImage = view.findViewById(R.id.img_section_second_image);
         }
 
         public void bind(String firstImageUrl, String secondImageUrl) {
@@ -103,17 +124,22 @@ public class MainActivitySectionAdapter extends RecyclerView.Adapter<RecyclerVie
         View view;
         RecyclerView.ViewHolder holder;
 
-        if(viewType == PRODUCT_SECTION) {
-            view = layoutInflater.inflate(R.layout.section_list_item_product, viewGroup, false);
-            holder = new MyViewHolder(view);
-        } else if(viewType == BANNER_SECTION) {
-            view = layoutInflater.inflate(R.layout.list_item_banner, viewGroup, false);
-            holder = new MyViewHolderBanner(view);
-
-        } else {
-            view = layoutInflater.inflate(R.layout.list_item_split, viewGroup, false);
-            holder = new MyViewHolderSplitBanner(view);
-
+        switch (viewType) {
+            case PRODUCT_SECTION:
+                view = layoutInflater.inflate(R.layout.section_product_list_item, viewGroup, false);
+                holder = new MyViewHolder(view);
+                break;
+            case BANNER_SECTION:
+                view = layoutInflater.inflate(R.layout.section_banner_list_item, viewGroup, false);
+                holder = new MyViewHolderBanner(view);
+                break;
+            case SPLIT_BANNER_SECTION:
+                view = layoutInflater.inflate(R.layout.section_split_banner_list_item, viewGroup, false);
+                holder = new MyViewHolderSplitBanner(view);
+                break;
+            default:
+                view = layoutInflater.inflate(R.layout.section_missing_list_item, viewGroup, false);
+                holder = new MyViewHolderMissing(view);
         }
 
         return holder;
@@ -125,15 +151,22 @@ public class MainActivitySectionAdapter extends RecyclerView.Adapter<RecyclerVie
         Content content = mContents.get(i);
 
         String sectionType = content.getSectionType();
+        sectionType = sectionType.toLowerCase().trim();
 
-        if(sectionType.equalsIgnoreCase("horizontalFreeScroll")) {
-            ((MyViewHolder)holder).bind(content);
-        } else if(sectionType.equalsIgnoreCase("banner")) {
-            ((MyViewHolderBanner)holder).bind(content.getBannerImage());
-        } else if(sectionType.equalsIgnoreCase("splitBanner")) {
-            ((MyViewHolderSplitBanner)holder).bind(content.getFirstImage(), content.getSecondImage());
+        switch (sectionType) {
+            case SECTION_TYPE_HORIZONTAL_FREE_SCROLL:
+                ((MyViewHolder)holder).bind(content);
+                break;
+            case SECTION_TYPE_BANNER:
+                ((MyViewHolderBanner)holder).bind(content.getBannerImage());
+                break;
+            case SECTION_TYPE_SPLIT_BANNER:
+                ((MyViewHolderSplitBanner)holder).bind(content.getFirstImage(), content.getSecondImage());
+                break;
+            default:
+                ((MyViewHolderMissing)holder).bind(mNoInfo);
+
         }
-
 
     }
 
@@ -147,15 +180,23 @@ public class MainActivitySectionAdapter extends RecyclerView.Adapter<RecyclerVie
 
         Content content = mContents.get(position);
         String sectionType = content.getSectionType();
+        sectionType = sectionType.toLowerCase().trim();
 
-        int viewType = 0;
+        int viewType;
 
-        if(sectionType.equalsIgnoreCase("horizontalFreeScroll")) {
-            viewType = PRODUCT_SECTION;
-        } else if(sectionType.equalsIgnoreCase("banner")) {
-            viewType = BANNER_SECTION;
-        } else if(sectionType.equalsIgnoreCase("splitBanner")) {
-            viewType = SPLIT_BANNER_SECTION;
+        switch (sectionType) {
+            case SECTION_TYPE_HORIZONTAL_FREE_SCROLL:
+                viewType = PRODUCT_SECTION;
+                break;
+            case SECTION_TYPE_BANNER:
+                viewType = BANNER_SECTION;
+                break;
+            case SECTION_TYPE_SPLIT_BANNER:
+                viewType = SPLIT_BANNER_SECTION;
+                break;
+            default:
+                viewType = MISSING_SECTION;
+
         }
 
         return viewType;

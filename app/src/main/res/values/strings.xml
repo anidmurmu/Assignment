@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Assignment</string>
+    <string name="info_missing">Info is missing</string>
+    <string name="api_call_error">Api call error</string>
+    <string name="api_response_error">Api response error</string>
+    <string name="internet_response_error">Internet response error</string>
+    <string name="unknown">Unknown error</string>
+    <string name="categories">Categories</string>
 </resources>

@@ -15,9 +15,11 @@ import com.example.anid.assignment.api.model.Product;
 
 import java.util.List;
 
-public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapter.MyViewHolder> {
+public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyViewHolder> {
 
     private Context mContext;
+
+    // Contains list of products for each section product
     private List<Product> mProductsList;
 
     class MyViewHolder extends RecyclerView.ViewHolder {
@@ -37,9 +39,10 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
         }
 
         public void bind(Product product) {
+
+            // Setting product image with Glide library
             Glide.with(mContext).load(product.getImageURL())
                     .into(mProductImage);
-
 
             mProductName.setText(product.getName());
             mProductPrice.setText(product.getPrice() + "");
@@ -47,7 +50,7 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
         }
     }
 
-    public MainActivityAdapter(Context context, List<Product> productsList) {
+    public ProductsAdapter(Context context, List<Product> productsList) {
         mContext = context;
         mProductsList = productsList;
     }
@@ -56,7 +59,7 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(mContext)
-                .inflate(R.layout.list_item_product, viewGroup, false);
+                .inflate(R.layout.product_list_item, viewGroup, false);
 
         return new MyViewHolder(view);
     }
@@ -64,20 +67,11 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, int i) {
         Product product = mProductsList.get(i);
-
-
-        /*Glide.with(mContext).load(product.getImageURL())
-                .into(myViewHolder.mProductImage);
-
-
-        myViewHolder.mProductName.setText(product.getName());
-        myViewHolder.mProductPrice.setText(product.getPrice() + "");
-        myViewHolder.mProductType.setText(product.getType());*/
         myViewHolder.bind(product);
     }
 
     @Override
     public int getItemCount() {
-        return mProductsList.size();
+        return mProductsList == null ? 0 : mProductsList.size();
     }
 }

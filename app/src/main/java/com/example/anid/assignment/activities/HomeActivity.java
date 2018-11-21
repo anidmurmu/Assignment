@@ -7,10 +7,9 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.example.anid.assignment.adapters.MainActivitySectionAdapter;
+import com.example.anid.assignment.adapters.HomeActivityAdapter;
 import com.example.anid.assignment.api.model.Data;
 import com.example.anid.assignment.api.service.DataClient;
 import com.example.anid.assignment.R;
@@ -23,7 +22,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity {
 
     // Vertical recyclerview for each section
     private RecyclerView mRecyclerViewSection;
@@ -41,15 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
         getSupportActionBar().setTitle(R.string.categories);
 
-        mNoInternetConn = findViewById(R.id.img_no_internet);
-        mContentSwipeRefreshLayout = findViewById(R.id.refrest_layout);
-        mContentSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
-
-        mProgressView = findViewById(R.id.progress_bar);
-        mProgressView.setVisibility(View.VISIBLE);
-
-        mRecyclerViewSection = findViewById(R.id.recycler_view_section);
-        mRecyclerViewSection.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        initViews();
 
         refreshView();
 
@@ -63,16 +54,45 @@ public class MainActivity extends AppCompatActivity {
         );
     }
 
+    private void initViews() {
+        mNoInternetConn = findViewById(R.id.img_no_internet);
+        mContentSwipeRefreshLayout = findViewById(R.id.refrest_layout);
+        mContentSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
+
+        mProgressView = findViewById(R.id.progress_bar);
+        mProgressView.setVisibility(View.VISIBLE);
+
+        mRecyclerViewSection = findViewById(R.id.recycler_view_section);
+        mRecyclerViewSection.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+
+    }
+
+    private void hideProgress() {
+        mProgressView.setVisibility(View.GONE);
+    }
+
+    private void showProgress() {
+        mProgressView.setVisibility(View.VISIBLE);
+    }
+
+    private void showNoInternetScreen() {
+        mNoInternetConn.setVisibility(View.VISIBLE);
+    }
+
+    private void hideNoInternetScreen() {
+        mNoInternetConn.setVisibility(View.GONE);
+    }
+
     private void refreshView() {
         mContentSwipeRefreshLayout.setRefreshing(true);
-        if(DeviceUtils.hasInternetAccess(MainActivity.this)) {
-            mNoInternetConn.setVisibility(View.GONE);
+        if(DeviceUtils.hasInternetAccess(HomeActivity.this)) {
+            hideNoInternetScreen();
             mRecyclerViewSection.setVisibility(View.VISIBLE);
             getData();
         } else {
             Toast.makeText(this, R.string.no_internet_connnection, Toast.LENGTH_SHORT).show();
             mRecyclerViewSection.setVisibility(View.GONE);
-            mNoInternetConn.setVisibility(View.VISIBLE);
+            showNoInternetScreen();
 
         }
         mContentSwipeRefreshLayout.setRefreshing(false);
@@ -84,24 +104,24 @@ public class MainActivity extends AppCompatActivity {
         DataClient dataClient = ServiceGenerator.createService(DataClient.class);
         Call<Data> call = dataClient.getData();
 
-        mProgressView.setVisibility(View.VISIBLE);
+        showProgress();
 
         call.enqueue(new Callback<Data>() {
             @Override
             public void onResponse(Call<Data> call, Response<Data> response) {
                 if(response.isSuccessful()) {
                     if(response.body().getCode() != 200) {
-                        Toast.makeText(MainActivity.this, R.string.api_call_error, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(HomeActivity.this, R.string.api_call_error, Toast.LENGTH_SHORT).show();
                         return;
                     }
                     mData = response.body();
-                    MainActivitySectionAdapter mainActivitySectionAdapter = new MainActivitySectionAdapter(MainActivity.this, mData);
+                    HomeActivityAdapter mainActivitySectionAdapter = new HomeActivityAdapter(HomeActivity.this, mData);
                     mRecyclerViewSection.setAdapter(mainActivitySectionAdapter);
                 } else {
-                    Toast.makeText(MainActivity.this, R.string.api_response_error, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(HomeActivity.this, R.string.api_response_error, Toast.LENGTH_SHORT).show();
 
                 }
-                mProgressView.setVisibility(View.GONE);
+                hideProgress();
             }
 
             @Override
@@ -109,13 +129,13 @@ public class MainActivity extends AppCompatActivity {
 
                 // handle error
                 if(t instanceof IOException) {
-                    Toast.makeText(MainActivity.this, R.string.internet_response_error, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(HomeActivity.this, R.string.internet_response_error, Toast.LENGTH_SHORT).show();
 
                 } else {
-                    Toast.makeText(MainActivity.this, R.string.unknown, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(HomeActivity.this, R.string.unknown, Toast.LENGTH_SHORT).show();
 
                 }
-                mProgressView.setVisibility(View.GONE);
+                hideProgress();
             }
         });
     }

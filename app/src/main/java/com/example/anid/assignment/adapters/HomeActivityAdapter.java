@@ -18,13 +18,13 @@ import com.example.anid.assignment.api.model.Product;
 
 import java.util.List;
 
-public class MainActivitySectionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class HomeActivityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context mContext;
     private Data mData;
     private List<Content> mContents;
 
-    private static final String mNoInfo = "No information availabel";
+    private static final String mNoInfo = "No information available";
 
     private static final int PRODUCT_SECTION = R.layout.section_product_list_item;
     private static final int BANNER_SECTION = R.layout.section_banner_list_item;
@@ -110,7 +110,7 @@ public class MainActivitySectionAdapter extends RecyclerView.Adapter<RecyclerVie
     }
 
 
-    public MainActivitySectionAdapter(Context context, Data data) {
+    public HomeActivityAdapter(Context context, Data data) {
         mContext = context;
         mData = data;
         mContents = mData.getContent();

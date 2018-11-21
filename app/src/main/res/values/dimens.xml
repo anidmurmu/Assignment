@@ -1,16 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="product_width">124dp</dimen>
     <dimen name="product_image_height">124dp</dimen>
     <dimen name="product_name_text">16sp</dimen>
+    <dimen name="product_section_height">270dp</dimen>
+    <dimen name="banner_section_height">240dp</dimen>
 
     <!-- Paddings -->
     <dimen name="small_padding">4dp</dimen>
     <dimen name="medium_padding">8dp</dimen>
-    <dimen name="large_padding">8dp</dimen>
+    <dimen name="large_padding">16dp</dimen>
 
     <!-- Margins -->
     <dimen name="small_margin">4dp</dimen>
     <dimen name="medium_margin">8dp</dimen>
-    <dimen name="large_margin">8dp</dimen>
+    <dimen name="large_margin">16dp</dimen>
+
+    <!-- Product -->
+    <dimen name="product_width">124dp</dimen>
+
+    <!-- Text -->
+    <dimen name="small_text">12sp</dimen>
+    <dimen name="medium_text">16sp</dimen>
+    <dimen name="large_text">20sp</dimen>
+
+    <!-- Elevation for card view -->
+    <dimen name="small_elevation">8dp</dimen>
+    <dimen name="medium_elevation">12dp</dimen>
+    <dimen name="large_elevation">16dp</dimen>
+
+    <!--  Radius for card view -->
+    <dimen name="small_radius">8dp</dimen>
 </resources>

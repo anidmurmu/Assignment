@@ -1,9 +1,12 @@
 package com.example.anid.assignment.activities;
 
+import android.support.constraint.ConstraintLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.anid.assignment.adapters.MainActivitySectionAdapter;
@@ -11,6 +14,7 @@ import com.example.anid.assignment.api.model.Data;
 import com.example.anid.assignment.api.service.DataClient;
 import com.example.anid.assignment.R;
 import com.example.anid.assignment.api.service.ServiceGenerator;
+import com.example.anid.assignment.helpers.DeviceUtils;
 
 import java.io.IOException;
 
@@ -25,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
 
     // Contains all data from api response
     private Data mData;
+    private ConstraintLayout mNoInternetConn;
+    private SwipeRefreshLayout mContentSwipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,11 +39,40 @@ public class MainActivity extends AppCompatActivity {
 
         getSupportActionBar().setTitle(R.string.categories);
 
+        mNoInternetConn = findViewById(R.id.img_no_internet);
+        mContentSwipeRefreshLayout = findViewById(R.id.refrest_layout);
+        mContentSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
+
         mRecyclerViewSection = findViewById(R.id.recycler_view_section);
         mRecyclerViewSection.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
-        getData();
+        refreshView();
+
+        mContentSwipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        refreshView();
+                    }
+                }
+        );
     }
+
+    private void refreshView() {
+        mContentSwipeRefreshLayout.setRefreshing(true);
+        if(DeviceUtils.hasInternetAccess(MainActivity.this)) {
+            mNoInternetConn.setVisibility(View.GONE);
+            mRecyclerViewSection.setVisibility(View.VISIBLE);
+            getData();
+        } else {
+            Toast.makeText(this, R.string.no_internet_connnection, Toast.LENGTH_SHORT).show();
+            mRecyclerViewSection.setVisibility(View.GONE);
+            mNoInternetConn.setVisibility(View.VISIBLE);
+
+        }
+        mContentSwipeRefreshLayout.setRefreshing(false);
+    }
+
 
     private void getData() {
 

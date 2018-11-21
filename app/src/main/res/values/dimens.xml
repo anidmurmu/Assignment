@@ -29,5 +29,5 @@
     <dimen name="large_elevation">16dp</dimen>
 
     <!--  Radius for card view -->
-    <dimen name="small_radius">8dp</dimen>
+    <dimen name="small_radius">4dp</dimen>
 </resources>

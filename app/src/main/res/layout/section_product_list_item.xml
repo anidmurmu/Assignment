@@ -12,8 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_gravity="center"
-        android:paddingLeft="@dimen/large_padding">
+        android:layout_gravity="center">
 
         <TextView
             android:id="@+id/txt_section_header"
@@ -22,7 +21,8 @@
             android:text="Header"
             android:textColor="@color/colorBlack"
             android:textSize="@dimen/large_text"
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            android:layout_marginLeft="@dimen/large_margin"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view_product_list"

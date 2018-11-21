@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.anid.assignment.adapters.MainActivitySectionAdapter;
@@ -31,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private Data mData;
     private ConstraintLayout mNoInternetConn;
     private SwipeRefreshLayout mContentSwipeRefreshLayout;
+    private View mProgressView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +44,9 @@ public class MainActivity extends AppCompatActivity {
         mNoInternetConn = findViewById(R.id.img_no_internet);
         mContentSwipeRefreshLayout = findViewById(R.id.refrest_layout);
         mContentSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
+
+        mProgressView = findViewById(R.id.progress_bar);
+        mProgressView.setVisibility(View.VISIBLE);
 
         mRecyclerViewSection = findViewById(R.id.recycler_view_section);
         mRecyclerViewSection.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
@@ -79,6 +84,8 @@ public class MainActivity extends AppCompatActivity {
         DataClient dataClient = ServiceGenerator.createService(DataClient.class);
         Call<Data> call = dataClient.getData();
 
+        mProgressView.setVisibility(View.VISIBLE);
+
         call.enqueue(new Callback<Data>() {
             @Override
             public void onResponse(Call<Data> call, Response<Data> response) {
@@ -94,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, R.string.api_response_error, Toast.LENGTH_SHORT).show();
 
                 }
+                mProgressView.setVisibility(View.GONE);
             }
 
             @Override
@@ -107,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, R.string.unknown, Toast.LENGTH_SHORT).show();
 
                 }
+                mProgressView.setVisibility(View.GONE);
             }
         });
     }

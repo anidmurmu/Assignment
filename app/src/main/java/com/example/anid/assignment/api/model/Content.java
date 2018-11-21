@@ -5,11 +5,17 @@ import java.util.List;
 
 public class Content {
 
+    // Common to all section
     private String sectionType;
+
+    // Section with products list
     private String name;
     private List<Product> products = new ArrayList<>();
 
+    // Section with Banner image
     private String bannerImage;
+
+    // Section with Split banner image
     private String firstImage;
     private String secondImage;
 

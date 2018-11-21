@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.anid.assignment.R;
-import com.example.anid.assignment.api.model.Data;
 import com.example.anid.assignment.api.model.Product;
 
 import java.util.List;
@@ -36,6 +35,16 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
             mProductPrice = view.findViewById(R.id.product_price);
             mProductType = view.findViewById(R.id.product_type);
         }
+
+        public void bind(Product product) {
+            Glide.with(mContext).load(product.getImageURL())
+                    .into(mProductImage);
+
+
+            mProductName.setText(product.getName());
+            mProductPrice.setText(product.getPrice() + "");
+            mProductType.setText(product.getType());
+        }
     }
 
     public MainActivityAdapter(Context context, List<Product> productsList) {
@@ -57,13 +66,14 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
         Product product = mProductsList.get(i);
 
 
-        Glide.with(mContext).load(product.getImageURL())
+        /*Glide.with(mContext).load(product.getImageURL())
                 .into(myViewHolder.mProductImage);
 
 
         myViewHolder.mProductName.setText(product.getName());
         myViewHolder.mProductPrice.setText(product.getPrice() + "");
-        myViewHolder.mProductType.setText(product.getType());
+        myViewHolder.mProductType.setText(product.getType());*/
+        myViewHolder.bind(product);
     }
 
     @Override
